@@ -5,8 +5,8 @@
     "name": "rYdddlPWk",
     "namespace": "default",
     "uid": "54d40963-05d0-4fb3-92d3-a68c39544a44",
-    "resourceVersion": "1786710013654008",
-    "generation": 1,
+    "resourceVersion": "1787667768329988",
+    "generation": 2,
     "creationTimestamp": "2026-08-14T12:20:13Z",
     "labels": {
       "grafana.app/deprecatedInternalID": "3072640037150720"
@@ -15,9 +15,11 @@
       "grafana.app/createdBy": "access-policy:service",
       "grafana.app/managedBy": "classic-file-provisioning",
       "grafana.app/managerId": "default",
-      "grafana.app/sourceChecksum": "d4ab85585381580f5f89e7e9cb76ef7d",
+      "grafana.app/sourceChecksum": "0795812159f90affe3417d2e2c4d39d5",
       "grafana.app/sourcePath": "/etc/grafana/provisioning/dashboards/node-exporter-full.json",
-      "grafana.app/sourceTimestamp": "1786709777000",
+      "grafana.app/sourceTimestamp": "1787667763000",
+      "grafana.app/updatedBy": "access-policy:service",
+      "grafana.app/updatedTimestamp": "2026-08-25T14:22:48Z",
       "grafana.app/folder": ""
     }
   },
@@ -994,7 +996,7 @@
                   ]
                 }
               },
-              "title": "Basic CPU / Mem / Net / Disk"
+              "title": "VPS SurDev Metrics"
             }
           }
         ]
