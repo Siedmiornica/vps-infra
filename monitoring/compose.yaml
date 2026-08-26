@@ -2,7 +2,15 @@ services:
   node-exporter:
     image: prom/node-exporter:latest
     container_name: node-exporter
+    command:
+      - '--path.rootfs=/host_files'
+      - '--collector.disable-defaults'
+      - '--collector.cpu'
+      - '--collector.meminfo'
+    pid: host
     restart: unless-stopped
+    volumes:
+      - '/:/host_files:ro,rslave'
     networks:
       - web
 
