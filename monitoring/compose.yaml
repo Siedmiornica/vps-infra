@@ -8,8 +8,7 @@ services:
       - '--collector.cpu'
       - '--collector.meminfo'
     pid: host
-    deploy:
-      restart: on-failure:3
+    restart: on-failure:3
     volumes:
       - '/:/host_files:ro,rslave'
     networks:
