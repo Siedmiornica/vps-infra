@@ -1,6 +1,6 @@
 services:
   node-exporter:
-    image: prom/node-exporter:latest
+    image: quay.io/prometheus/node-exporter:1.12.1
     container_name: node-exporter
     command:
       - '--path.rootfs=/host_files'
@@ -8,11 +8,15 @@ services:
       - '--collector.cpu'
       - '--collector.meminfo'
     pid: host
-    restart: unless-stopped
+    deploy:
+      restart: on-failure:3
     volumes:
       - '/:/host_files:ro,rslave'
     networks:
       - web
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
 
   prometheus:
     image: prom/prometheus:latest
