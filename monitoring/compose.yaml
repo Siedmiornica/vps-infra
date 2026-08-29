@@ -8,6 +8,7 @@ services:
       - '--collector.disable-defaults'
       - '--collector.cpu'
       - '--collector.meminfo'
+      - '--collector.filesystem'
     pid: host
     restart: on-failure:3
     volumes:
