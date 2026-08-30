@@ -1,6 +1,13 @@
 scrape_configs:
-  - job_name: 'vps-hardware'
-    scrape_interval: 15s
+  - job_name: 'node-exporter-vps-hardware'
+    scrape_interval: 5s
     scrape_timeout: 500ms
+    sample_limit: 20
     static_configs:
       - targets: ['node-exporter:9100']
+        labels:
+          instance: 'vps-ovh'
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'node_cpu_seconds_total|node_memory_MemTotal_bytes|node_memory_MemAvailable_bytes|node_filesystem_size_bytes|node_filesystem_avail_bytes'
+        action: keep
