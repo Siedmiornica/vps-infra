@@ -2,17 +2,22 @@ services:
   node-exporter:
     image: quay.io/prometheus/node-exporter:v1.12.1
     container_name: node-exporter
-    expose: "9100"
+    expose:
+      - "9100"
     command:
-      - '--path.rootfs=/host_files'
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--path.rootfs=/rootfs'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($|/)'
       - '--collector.disable-defaults'
       - '--collector.cpu'
       - '--collector.meminfo'
       - '--collector.filesystem'
-    pid: host
     restart: on-failure:3
     volumes:
-      - '/:/host_files:ro,rslave'
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
     networks:
       - web
     read_only: true
