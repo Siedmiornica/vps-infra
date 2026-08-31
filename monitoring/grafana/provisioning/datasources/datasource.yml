@@ -6,3 +6,10 @@ datasources:
     access: proxy
     url: http://prometheus:9090
     isDefault: true
+    jsonData:
+      httpMethod: GET
+      prometheusType: Prometheus
+      prometheusVersion: 3.14.0
+      cacheLevel: 'High'
+      seriesEndpoint: false
+      timeInterval: 5s
