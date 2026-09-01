@@ -47,7 +47,7 @@ services:
       - web
 
   grafana:
-    image: grafana/grafana:v13.2.0
+    image: grafana/grafana:13.2.0
     container_name: grafana
     restart: on-failure:3
     <<: *lockdown
