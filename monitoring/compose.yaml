@@ -1,14 +1,20 @@
-x-lockdown: &lockdown
+x-security: &security
   read_only: true
   security_opt:
     - "no-new-privileges:true"
+  cap_drop:
+    - ALL
+
+x-web-network: &web-network
+  networks:
+    - web
 
 services:
   node-exporter:
     image: quay.io/prometheus/node-exporter:v1.12.1
     container_name: node-exporter
     restart: on-failure:3
-    <<: *lockdown
+    <<: [*security, *web-network]
     user: "65534:65534"
     command:
       - '--path.procfs=/host/proc'
@@ -27,41 +33,33 @@ services:
       - "9100"
     networks:
       - web
-    cap_drop:
-      - ALL
 
   prometheus:
     image: quay.io/prometheus/prometheus:v3.14.0
     container_name: prometheus
     restart: on-failure:3
-    <<: *lockdown
+    <<: [*security, *web-network]
     user: "65534:65534"
     tmpfs:
       - /tmp
-    cap_drop:
-      - ALL
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus-data:/prometheus
-    networks:
-      - web
+
 
   grafana:
     image: grafana/grafana:13.2.1
     container_name: grafana
     restart: on-failure:3
-    <<: *lockdown
+    <<: [*security, *web-network]
     user: "472:472"
     tmpfs:
       - /tmp
-    cap_drop:
-      - ALL
     volumes:
       - grafana-data:/var/lib/grafana
       - ./grafana/config/grafana.ini:/etc/grafana/grafana.ini:ro
       - ./grafana/provisioning/datasources/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml:ro
-    networks:
-      - web
+
 
 volumes:
   prometheus-data:
