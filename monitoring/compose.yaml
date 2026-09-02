@@ -47,7 +47,7 @@ services:
       - web
 
   grafana:
-    image: grafana/grafana:13.2.0
+    image: grafana/grafana:13.2.1
     container_name: grafana
     restart: on-failure:3
     <<: *lockdown
@@ -58,6 +58,8 @@ services:
       - ALL
     volumes:
       - grafana-data:/var/lib/grafana
+      - ./grafana/config/grafana.ini:/etc/grafana/grafana.ini:ro
+      - ./grafana/provisioning/datasources/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml:ro
     networks:
       - web
 
