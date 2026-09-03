@@ -40,6 +40,10 @@ services:
     restart: on-failure:3
     <<: [*security, *web-network]
     user: "65534:65534"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yaml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
     tmpfs:
       - /tmp
     volumes:
@@ -59,7 +63,7 @@ services:
       - grafana-data:/var/lib/grafana
       - ./grafana/config/grafana.ini:/etc/grafana/grafana.ini:ro
       - ./grafana/provisioning/datasources/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml:ro
-      - ./grafana/provisioning/dashboards/basic-vps.yaml:etc/grafana/provisioning/dashboards/dashboard.yaml:ro
+
 
 volumes:
   prometheus-data:
