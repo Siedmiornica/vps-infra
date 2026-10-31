@@ -16,12 +16,61 @@ The goal is to create a small, maintainable homelab-style deployment that demons
 
 ## Architecture
 
+This repository intentionally separates the stack into two Docker Compose files:
+
+- `compose.yaml` contains the public ingress layer: Nginx and Certbot
+- `monitoring/compose.yaml` contains the observability layer: Node Exporter, Prometheus, and Grafana
+
+This split keeps the public-facing infrastructure separate from the monitoring stack and makes the setup easier to reason about and extend.
+
 - Nginx listens on ports 80 and 443 and routes traffic
 - HTTP requests are redirected to HTTPS
 - Certificates are managed through Certbot and Let's Encrypt
 - Prometheus scrapes infrastructure metrics
 - Grafana visualizes metrics using a provisioned dashboard
 - Persistent Docker volumes are used for Prometheus and Grafana data
+
+## Why two Compose files?
+
+The project separates concerns into two layers:
+
+1. `compose.yaml` — ingress and TLS
+   - Nginx handles public traffic
+   - Certbot manages Let's Encrypt certificates
+   - this layer exposes services to the internet
+
+2. `monitoring/compose.yaml` — metrics and dashboards
+   - Node Exporter collects host metrics
+   - Prometheus stores time-series data
+   - Grafana visualizes the collected data
+
+This is a common and valid approach for a small self-hosted environment because it keeps the public entry point isolated from the monitoring stack while still allowing both parts to communicate through the same Docker network.
+
+## Startup order
+
+Both stacks rely on the external Docker network `web`, so the recommended order is:
+
+1. Create the Docker network:
+
+```bash
+docker network create web
+```
+
+2. Start the monitoring stack:
+
+```bash
+cd monitoring
+docker compose up -d
+```
+
+3. Start the ingress stack:
+
+```bash
+cd ..
+docker compose up -d
+```
+
+This order keeps the monitoring services available before the public proxy is brought online and matches the dependency model used across the configuration.
 
 ## Project Structure
 
