@@ -106,6 +106,14 @@ Before deploying, ensure you have:
 
 ## Deployment
 
+The project has two Docker Compose stacks, so the deployment is split into two steps for clarity:
+
+1. create the shared Docker network,
+2. start the monitoring stack,
+3. start the public ingress stack.
+
+### Manual startup
+
 1. Create the required Docker network:
 
 ```bash
@@ -134,6 +142,24 @@ docker compose logs -f
 ```
 
 5. Configure DNS so the domain points to the VPS.
+
+### Automated startup with scripts
+
+These scripts were added to reduce manual errors and make deployment more repeatable. They are useful when starting the project on a new VPS, restarting after a reboot, or bringing the stack down cleanly before making changes.
+
+From the repository root, run:
+
+```bash
+bash scripts/start.sh
+```
+
+To stop the stack:
+
+```bash
+bash scripts/stop.sh
+```
+
+The `start.sh` script ensures the required `web` network exists, starts the monitoring stack first, and then starts the ingress stack. The `stop.sh` script stops the public stack first and then the monitoring stack to keep the shutdown process predictable.
 
 ## TLS and HTTPS
 
