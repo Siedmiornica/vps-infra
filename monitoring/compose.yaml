@@ -58,6 +58,8 @@ services:
     user: "472:472"
     tmpfs:
       - /tmp
+    environment:
+      - GF_PLUGINS_PREINSTALL_DISABLED=true
     volumes:
       - grafana-data:/var/lib/grafana
       - ./grafana/config/grafana.ini:/etc/grafana/grafana.ini:ro
