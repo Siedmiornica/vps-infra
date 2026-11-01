@@ -9,11 +9,14 @@ x-web-network: &web-network
   networks:
     - web
 
+x-restart-policy: &restart-policy
+  restart: on-failure:3
+
 services:
   node-exporter:
     image: quay.io/prometheus/node-exporter:v1.12.1
     container_name: node-exporter
-    restart: on-failure:3
+    <<: [*restart-policy]
     <<: [*security, *web-network]
     user: "65534:65534"
     command:
@@ -37,7 +40,7 @@ services:
   prometheus:
     image: quay.io/prometheus/prometheus:v3.14.0
     container_name: prometheus
-    restart: on-failure:3
+    <<: [*restart-policy]
     <<: [*security, *web-network]
     user: "65534:65534"
     tmpfs:
@@ -53,7 +56,7 @@ services:
   grafana:
     image: grafana/grafana:13.2.1
     container_name: grafana
-    restart: on-failure:3
+    <<: [*restart-policy]
     <<: [*security, *web-network]
     user: "472:472"
     tmpfs:
