@@ -1,0 +1,20 @@
+# Environment files and local secrets
+.env
+.env.*
+!.env.example
+
+# TLS certificates and private keys
+*.pem
+*.key
+*.p12
+*.pfx
+letsencrypt/
+certbot-data/
+
+# Local logs and backups
+*.log
+backups/
+
+# Operating system files
+.DS_Store
+Thumbs.db
