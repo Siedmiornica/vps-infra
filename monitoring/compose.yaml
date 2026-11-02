@@ -16,8 +16,7 @@ services:
   node-exporter:
     image: quay.io/prometheus/node-exporter:v1.12.1
     container_name: node-exporter
-    <<: [*restart-policy]
-    <<: [*security, *web-network]
+    <<: [*restart-policy, *security, *web-network]
     user: "65534:65534"
     command:
       - '--path.procfs=/host/proc'
@@ -40,8 +39,7 @@ services:
   prometheus:
     image: quay.io/prometheus/prometheus:v3.14.0
     container_name: prometheus
-    <<: [*restart-policy]
-    <<: [*security, *web-network]
+    <<: [*restart-policy, *security, *web-network]
     user: "65534:65534"
     tmpfs:
       - /tmp
@@ -56,8 +54,7 @@ services:
   grafana:
     image: grafana/grafana:13.2.1
     container_name: grafana
-    <<: [*restart-policy]
-    <<: [*security, *web-network]
+    <<: [*restart-policy, *security, *web-network]
     user: "472:472"
     tmpfs:
       - /tmp
@@ -72,7 +69,6 @@ services:
 volumes:
   prometheus-data:
   grafana-data:
-
 networks:
   web:
     external: true

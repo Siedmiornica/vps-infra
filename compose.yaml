@@ -1,18 +1,36 @@
 x-restart-policy: &restart-policy
   restart: on-failure:3
 
+x-security: &security
+  read_only: true
+  security_opt:
+    - "no-new-privileges:true"
+  cap_drop:
+    - ALL
+
 services:
   nginx:
     image: docker.io/library/nginx:1.30.6@sha256:66b50d24288dba67f3d000b31223daefc4868c58d29aaacb6a4ff9771597b5eb
     container_name: nginx
-    <<: [*restart-policy]
-    restart: on-failure:3
+    <<: [*restart-policy, *security]
+    cap_add:
+      - CHOWN
+      - SETUID
+      - SETGID
+      - NET_BIND_SERVICE
+    tmpfs:
+      - /tmp
+      - /run
+      - /var/cache/nginx
+    mem_limit: 256m
+    cpus: 0.5
+    pids_limit: 100
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - certbot-www:/var/www/certbot
+      - certbot-www:/var/www/certbot:ro
       - certbot-conf:/etc/letsencrypt:ro
     networks:
       - web
@@ -20,14 +38,23 @@ services:
   certbot:
     image: docker.io/certbot/certbot:v5.8.0@sha256:f70ad0adbb7e117f0fe42a63c553f28ea451edabc0148757b6efcd9735acaa20
     container_name: certbot
-    <<: [*restart-policy]
+    <<: [*restart-policy, *security]
+    entrypoint: /bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot; sleep 12h & wait $${!}; done'
+    tmpfs:
+      - /tmp
+      - /var/lib/letsencrypt
+    mem_limit: 256m
+    cpus: 0.5
+    pids_limit: 50
     volumes:
       - certbot-www:/var/www/certbot
       - certbot-conf:/etc/letsencrypt
+      - certbot-logs:/var/log/letsencrypt
 
 volumes:
   certbot-www:
   certbot-conf:
+  certbot-logs:
 
 networks:
   web:
