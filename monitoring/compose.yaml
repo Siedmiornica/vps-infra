@@ -14,7 +14,7 @@ x-restart-policy: &restart-policy
 
 services:
   node-exporter:
-    image: quay.io/prometheus/node-exporter:v1.12.1
+    image: docker.io/prom/node-exporter:v1.12.1@sha256:1b4e4438faca4dd7e001dd445d161a4a2091b0fededa84093b3a8dfeae1f1be0
     container_name: node-exporter
     <<: [*restart-policy, *security, *web-network]
     user: "65534:65534"
@@ -33,11 +33,9 @@ services:
       - /:/rootfs:ro
     expose:
       - "9100"
-    networks:
-      - web
 
   prometheus:
-    image: quay.io/prometheus/prometheus:v3.14.0
+    image: docker.io/prom/prometheus:v3.15.1@sha256:fa3302279710be2f21a8301ec17a8b4f2301fd829bd113839b3b6b02b6f191a2
     container_name: prometheus
     <<: [*restart-policy, *security, *web-network]
     user: "65534:65534"
@@ -52,7 +50,7 @@ services:
 
 
   grafana:
-    image: grafana/grafana:13.2.1
+    image: docker.io/grafana/grafana:13.2.5@sha256:9f7aa1e1e3246aade5792d35a738049f7f32f89cd51d1956cf426a4e86268a84
     container_name: grafana
     <<: [*restart-policy, *security, *web-network]
     user: "472:472"
